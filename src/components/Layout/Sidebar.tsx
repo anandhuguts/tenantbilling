@@ -27,7 +27,8 @@ const superAdminNavigation = [
 
 const tenantNavigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Orders', href: '/orders', icon: Package },
+  // { name: 'Orders', href: '/orders', icon: Package },
+  { name: 'Billing', href: '/billing', icon: Package },
   { name: 'Inventory', href: '/inventory', icon: ClipboardList },
   // { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Staff', href: '/staff', icon: Users },

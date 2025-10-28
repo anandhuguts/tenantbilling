@@ -23,6 +23,7 @@ import Inventory from "./pages/Inventory";
 import Staff from "./pages/Staff";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
+import BillingModule from "./pages/tenant/BillingModule";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
                 <Route path="settings" element={<Settings />} />
                 <Route path="orders" element={<RoleBasedRoute allowedRoles={['tenant', 'staff']}><Orders /></RoleBasedRoute>} />
                 <Route path="inventory" element={<RoleBasedRoute allowedRoles={['tenant']}><Inventory /></RoleBasedRoute>} />
+                 <Route path="billing" element={<RoleBasedRoute allowedRoles={['tenant']}><BillingModule /></RoleBasedRoute>} />
                 <Route path="staff" element={<RoleBasedRoute allowedRoles={['tenant']}><Staff /></RoleBasedRoute>} />
                 <Route path="tasks" element={<RoleBasedRoute allowedRoles={['staff']}><Tasks /></RoleBasedRoute>} />
               </Route>
