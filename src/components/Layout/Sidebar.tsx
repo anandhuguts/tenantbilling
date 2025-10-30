@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Package,
   ClipboardList,
-  FileText
+  FileText,
+  CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -22,6 +23,7 @@ const superAdminNavigation = [
   { name: 'Modules', href: '/modules', icon: Puzzle },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Users', href: '/users', icon: Users },
+  { name: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
