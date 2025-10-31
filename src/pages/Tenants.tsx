@@ -37,8 +37,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { tenantAPI } from '@/services/api';
 
-const API_URL = 'https://billingbackend-1vei.onrender.com'; // Change this to your backend URL
+const API_URL = 'http://localhost:5000'; // Change this to your backend URL
 
 interface Tenant {
   id: string;
@@ -85,138 +86,96 @@ const Tenants = () => {
     setFilteredTenants(filtered);
   }, [searchQuery, tenants]);
 
-  const loadTenants = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/tenants`);
-      const data = await response.json();
-      
-      if (response.ok) {
-        setTenants(data);
-        setFilteredTenants(data);
-      } else {
-        toast({
-          title: 'Error',
-          description: 'Failed to load tenants',
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
-      console.error('Load tenants error:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to connect to server',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+const loadTenants = async () => {
+  try {
+    setLoading(true);
+    const data = await tenantAPI.getTenants();
+    setTenants(data);
+    setFilteredTenants(data);
+  } catch (error) {
+    console.error("Load tenants error:", error);
+    toast({
+      title: "Error",
+      description: error.message || "Failed to load tenants",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      setLoading(true);
-      
-      if (editingTenant) {
-        // UPDATE tenant
-        const response = await fetch(`${API_URL}/tenants/${editingTenant.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-          toast({
-            title: 'Success',
-            description: 'Tenant updated successfully',
-          });
-        } else {
-          throw new Error(result.error || 'Failed to update tenant');
-        }
-      } else {
-        // CREATE tenant
-        const response = await fetch(`${API_URL}/tenants`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-          toast({
-            title: 'Success',
-            description: 'Tenant created successfully',
-          });
-        } else {
-          throw new Error(result.error || 'Failed to create tenant');
-        }
-      }
-      
-      setIsDialogOpen(false);
-      resetForm();
-      loadTenants();
-    } catch (error: any) {
-      console.error('Submit error:', error);
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to save tenant',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+  try {
+    setLoading(true);
 
-  const handleEdit = (tenant: Tenant) => {
-    setEditingTenant(tenant);
-    setFormData({
-      name: tenant.name,
-      category: tenant.category,
-      plan: tenant.plan,
-      email: tenant.email,
-      password: '', // Don't populate password for security
-      phone: tenant.phone || '',
-      status: tenant.status
+    if (editingTenant) {
+      // ✅ Update tenant via tenantAPI
+      await tenantAPI.updateTenant(editingTenant.id, formData);
+      toast({
+        title: "Success",
+        description: "Tenant updated successfully",
+      });
+    } else {
+      // ✅ Create tenant via tenantAPI
+      await tenantAPI.createTenant(formData);
+      toast({
+        title: "Success",
+        description: "Tenant created successfully",
+      });
+    }
+
+    setIsDialogOpen(false);
+    resetForm();
+    loadTenants(); // reload tenant list
+  } catch (error: any) {
+    console.error("Submit error:", error);
+    toast({
+      title: "Error",
+      description: error.message || "Failed to save tenant",
+      variant: "destructive",
     });
-    setIsDialogOpen(true);
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this tenant? This action cannot be undone.')) return;
-    
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/tenants/${id}`, {
-        method: 'DELETE',
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        toast({
-          title: 'Success',
-          description: 'Tenant deleted successfully',
-        });
-        loadTenants();
-      } else {
-        throw new Error(result.error || 'Failed to delete tenant');
-      }
-    } catch (error: any) {
-      console.error('Delete error:', error);
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to delete tenant',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleEdit = (tenant: Tenant) => {
+  setEditingTenant(tenant);
+  setFormData({
+    name: tenant.name,
+    category: tenant.category,
+    plan: tenant.plan,
+    email: tenant.email,
+    password: "", // don’t prefill password
+    phone: tenant.phone || "",
+    status: tenant.status,
+  });
+  setIsDialogOpen(true);
+};
+
+const handleDelete = async (id: string) => {
+  if (!confirm("Are you sure you want to delete this tenant?")) return;
+
+  try {
+    setLoading(true);
+    await tenantAPI.deleteTenant(id);
+    toast({
+      title: "Success",
+      description: "Tenant deleted successfully",
+    });
+    loadTenants();
+  } catch (error: any) {
+    console.error("Delete error:", error);
+    toast({
+      title: "Error",
+      description: error.message || "Failed to delete tenant",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const resetForm = () => {
     setEditingTenant(null);

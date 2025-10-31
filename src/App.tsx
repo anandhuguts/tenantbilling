@@ -17,6 +17,8 @@ import StaffDashboard from "./pages/StaffDashboard";
 import Tenants from "./pages/Tenants";
 import Modules from "./pages/Modules";
 import Reports from "./pages/Reports";
+import Subscriptions from "./pages/Subscriptions";
+import AMC_report from "./pages/amc_report";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import Orders from "./pages/Orders";
@@ -43,7 +45,7 @@ const App = () => (
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Login />} />
-              
+
               {/* Protected Routes */}
               <Route
                 path="/"
@@ -54,18 +56,90 @@ const App = () => (
                 }
               >
                 <Route path="dashboard" element={<DashboardRouter />} />
-                <Route path="tenants" element={<RoleBasedRoute allowedRoles={['superadmin']}><Tenants /></RoleBasedRoute>} />
-                <Route path="modules" element={<RoleBasedRoute allowedRoles={['superadmin']}><Modules /></RoleBasedRoute>} />
-                <Route path="reports" element={<RoleBasedRoute allowedRoles={['superadmin']}><Reports /></RoleBasedRoute>} />
-                <Route path="users" element={<RoleBasedRoute allowedRoles={['superadmin']}><Users /></RoleBasedRoute>} />
+                <Route
+                  path="tenants"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <Tenants />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="modules"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <Modules />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="reports"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <Reports />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="amc_report"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <AMC_report />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="subscriptions"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <Subscriptions />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="users"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <Users />
+                    </RoleBasedRoute>
+                  }
+                />
                 <Route path="settings" element={<Settings />} />
-                <Route path="orders" element={<RoleBasedRoute allowedRoles={['tenant', 'staff']}><Orders /></RoleBasedRoute>} />
-                <Route path="inventory" element={<RoleBasedRoute allowedRoles={['tenant']}><Inventory /></RoleBasedRoute>} />
+                <Route
+                  path="orders"
+                  element={
+                    <RoleBasedRoute allowedRoles={["tenant", "staff"]}>
+                      <Orders />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="inventory"
+                  element={
+                    <RoleBasedRoute allowedRoles={["tenant"]}>
+                      <Inventory />
+                    </RoleBasedRoute>
+                  }
+                />
                 <Route path="report" element={<RoleBasedRoute allowedRoles={['tenant']}><ReportsModule /></RoleBasedRoute>} />
                 <Route path="account" element={<RoleBasedRoute allowedRoles={['tenant']}><AccountsModule /></RoleBasedRoute>} />
                  <Route path="billing" element={<RoleBasedRoute allowedRoles={['tenant']}><BillingModule /></RoleBasedRoute>} />
-                <Route path="staff" element={<RoleBasedRoute allowedRoles={['tenant']}><Staff /></RoleBasedRoute>} />
-                <Route path="tasks" element={<RoleBasedRoute allowedRoles={['staff']}><Tasks /></RoleBasedRoute>} />
+                <Route
+                  path="staff"
+                  element={
+                    <RoleBasedRoute allowedRoles={["tenant"]}>
+                      <Staff />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="tasks"
+                  element={
+                    <RoleBasedRoute allowedRoles={["staff"]}>
+                      <Tasks />
+                    </RoleBasedRoute>
+                  }
+                />
               </Route>
 
               {/* Catch all - redirect to login */}

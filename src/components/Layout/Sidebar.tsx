@@ -11,7 +11,8 @@ import {
   Package,
   CircleUser,
   ClipboardList,
-  FileText
+  FileText,
+  CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -22,7 +23,9 @@ const superAdminNavigation = [
   { name: 'Tenants', href: '/tenants', icon: Building2 },
   { name: 'Modules', href: '/modules', icon: Puzzle },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
+  { name: 'AMC_report', href: '/amc_report', icon: Package },
   { name: 'Users', href: '/users', icon: Users },
+  { name: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
