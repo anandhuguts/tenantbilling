@@ -557,3 +557,130 @@ export const paymentsAPI = {
     }
   },
 };
+
+// ============================================
+// AMC APIs
+// ============================================
+
+export const amcAPI = {
+  /**
+   * Get all AMC records
+   * GET /amc
+   */
+  getAllAMCs: async () => {
+    try {
+      const res = await fetch(`${API_BASE}/amc`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to fetch AMC records");
+      }
+      return await res.json();
+    } catch (error) {
+      console.error("amcAPI.getAllAMCs error:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get single AMC record by ID
+   * GET /amc/:id
+   */
+  getAMCById: async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/amc/${id}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to fetch AMC record");
+      }
+      return await res.json();
+    } catch (error) {
+      console.error("amcAPI.getAMCById error:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create a new AMC record
+   * POST /amc
+   * Body: { client_name, plan, start_date, end_date, status, amount, billing_frequency, tenat_amcid }
+   */
+  createAMC: async (amcData: {
+    client_name: string;
+    plan: string;
+    start_date: string;
+    end_date: string;
+    status?: boolean;
+    amount?: number;
+    billing_frequency?: string;
+    tenat_amcid?: string;
+  }) => {
+    try {
+      const res = await fetch(`${API_BASE}/amc`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(amcData),
+      });
+
+      // Read response as text first to handle non-JSON responses
+      const text = await res.text();
+      console.log("Raw AMC create response:", text);
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error("Failed to parse JSON response:", text);
+        throw new Error(
+          `Server returned non-JSON response: ${text.substring(0, 100)}`
+        );
+      }
+
+      if (!res.ok) throw new Error(data.error || "Failed to create AMC");
+      return data;
+    } catch (error) {
+      console.error("amcAPI.createAMC error:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update an existing AMC record
+   * PUT /amc/:id
+   * Body: { client_name?, plan?, start_date?, end_date?, status?, amount?, billing_frequency?, tenat_amcid? }
+   */
+  updateAMC: async (id: string, amcData: any) => {
+    try {
+      const res = await fetch(`${API_BASE}/amc/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(amcData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update AMC");
+      return data;
+    } catch (error) {
+      console.error("amcAPI.updateAMC error:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Delete an AMC record
+   * DELETE /amc/:id
+   */
+  deleteAMC: async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/amc/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete AMC");
+      return data;
+    } catch (error) {
+      console.error("amcAPI.deleteAMC error:", error);
+      throw error;
+    }
+  },
+};
