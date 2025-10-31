@@ -410,21 +410,21 @@ const Subscriptions: React.FC = () => {
                     title: "Basic",
                     note: "",
                     users: 1,
-                    features: ["Billing", "Reports", "1 user"],
+                    features: ["Billing", "Reports", "1 user", "AMC 100 AED/month"],
                   },
                   {
                     key: "professional",
                     title: "Professional",
                     note: "",
                     users: 2,
-                    features: ["Billing", "Reports", "Inventory", "2 users"],
+                    features: ["Billing", "Reports", "Inventory", "2 users", "AMC 250 AED/month"],
                   },
                   {
                     key: "enterprise",
                     title: "Enterprise",
                     note: "",
                     users: 10,
-                    features: ["Billing", "Reports", "Inventory", "10 users"],
+                    features: ["Billing", "Reports", "Inventory", "10 users", "AMC 350 AED/month"],
                   },
                 ].map((plan) => {
                   const isActive =
@@ -493,7 +493,7 @@ const Subscriptions: React.FC = () => {
                           </span>
                           {planPrice > 0 && (
                             <span className="text-sm text-muted-foreground">
-                              AED/month
+                              AED
                             </span>
                           )}
                         </div>

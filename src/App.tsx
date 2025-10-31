@@ -17,6 +17,7 @@ import Tenants from "./pages/Tenants";
 import Modules from "./pages/Modules";
 import Reports from "./pages/Reports";
 import Subscriptions from "./pages/Subscriptions";
+import AMC_report from "./pages/amc_report";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import Orders from "./pages/Orders";
@@ -70,6 +71,14 @@ const App = () => (
                   element={
                     <RoleBasedRoute allowedRoles={["superadmin"]}>
                       <Reports />
+                    </RoleBasedRoute>
+                  }
+                />
+                <Route
+                  path="amc_report"
+                  element={
+                    <RoleBasedRoute allowedRoles={["superadmin"]}>
+                      <AMC_report />
                     </RoleBasedRoute>
                   }
                 />

@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 
-const API_URL = 'https://billingbackend-1vei.onrender.com'; // Change this to your backend URL
+const API_URL = 'http://localhost:5000'; // Change this to your backend URL
 
 interface Tenant {
   id: string;

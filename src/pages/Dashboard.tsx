@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { reportsAPI, activityAPI } from "@/services/api";
+import { reportsAPI, activityAPI, paymentsAPI } from "@/services/api";
 import {
   Building2,
   Users,
@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
     loadDashboard();
@@ -64,6 +65,57 @@ const Dashboard = () => {
       setTenantGrowth(dashboardData.tenantGrowth || []);
       setCategoryDistribution(dashboardData.categoryDistribution || []);
       setPlanDistribution(dashboardData.planDistribution || []);
+
+      // Fetch all payments and calculate total revenue
+      try {
+        const paymentsResponse = await paymentsAPI.getAllPayments();
+        const payments = paymentsResponse?.payments || [];
+
+        // Calculate total revenue from all payments
+        const total = payments.reduce((sum: number, payment: any) => {
+          return sum + (Number(payment.amount) || 0);
+        }, 0);
+
+        setTotalRevenue(total);
+        console.log("Total revenue from payments:", total);
+
+        // Calculate monthly revenue trend from payments
+        const monthlyRevenue: Record<string, number> = {};
+
+        payments.forEach((payment: any) => {
+          if (payment.payment_date) {
+            const date = new Date(payment.payment_date);
+            const monthYear = date.toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            });
+
+            monthlyRevenue[monthYear] =
+              (monthlyRevenue[monthYear] || 0) + (Number(payment.amount) || 0);
+          }
+        });
+
+        // Convert to array and sort by date
+        const revenueArray = Object.entries(monthlyRevenue)
+          .map(([month, revenue]) => ({ month, revenue }))
+          .sort((a, b) => {
+            const dateA = new Date(a.month);
+            const dateB = new Date(b.month);
+            return dateA.getTime() - dateB.getTime();
+          })
+          .slice(-6); // Get last 6 months
+
+        setRevenueData(
+          revenueArray.length > 0
+            ? revenueArray
+            : dashboardData.revenueData || []
+        );
+        console.log("Monthly revenue trend:", revenueArray);
+      } catch (paymentsError) {
+        console.error("Failed to fetch payments:", paymentsError);
+        setTotalRevenue(0);
+        setRevenueData(dashboardData.revenueData || []);
+      }
 
       // Activity is separate (optional)
       try {
@@ -167,12 +219,12 @@ const Dashboard = () => {
     },
     {
       title: "Total Revenue",
-      value: totalRevenueAED,
+      value: totalRevenue, // Using actual revenue from payments table
       icon: DollarSign,
       trend: "+0%",
       trendUp: true,
       isCurrency: true,
-      currency: "AED",
+      currency: "AED", // Display in AED
       color: "text-secondary",
     },
     {
