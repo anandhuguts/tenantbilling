@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Package,
+  CircleUser,
   ClipboardList,
   FileText
 } from 'lucide-react';
@@ -30,8 +31,9 @@ const tenantNavigation = [
   // { name: 'Orders', href: '/orders', icon: Package },
   { name: 'Billing', href: '/billing', icon: Package },
   { name: 'Inventory', href: '/inventory', icon: ClipboardList },
-  // { name: 'Reports', href: '/reports', icon: BarChart3 },
-  { name: 'Staff', href: '/staff', icon: Users },
+  { name: 'Reports', href: '/report', icon: BarChart3 },
+  // { name: 'Staff', href: '/staff', icon: Users },
+  { name: 'Accounts', href: '/account', icon: CircleUser },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 

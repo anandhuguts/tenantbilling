@@ -59,7 +59,7 @@ const AccountsModule = () => {
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$62,995</div>
+            <div className="text-2xl font-bold">AED 62,995</div>
             <p className="text-xs text-muted-foreground mt-1">Cash + Stock</p>
           </CardContent>
         </Card>
@@ -70,7 +70,7 @@ const AccountsModule = () => {
             <DollarSign className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$8,000</div>
+            <div className="text-2xl font-bold">AED 8,000</div>
             <p className="text-xs text-muted-foreground mt-1">Accounts Payable</p>
           </CardContent>
         </Card>
@@ -81,7 +81,7 @@ const AccountsModule = () => {
             <DollarSign className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$5,500</div>
+            <div className="text-2xl font-bold">AED 5,500</div>
             <p className="text-xs text-success mt-1">This month</p>
           </CardContent>
         </Card>
@@ -92,13 +92,13 @@ const AccountsModule = () => {
             <Receipt className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$990</div>
+            <div className="text-2xl font-bold">AED 990</div>
             <p className="text-xs text-muted-foreground mt-1">This month</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabs for different accounts sections */}
+      {/* Tabs */}
       <Tabs defaultValue="daybook" className="space-y-4">
         <TabsList>
           <TabsTrigger value="daybook">Daybook</TabsTrigger>
@@ -142,8 +142,12 @@ const AccountsModule = () => {
                         <Badge variant="outline">{entry.type}</Badge>
                       </TableCell>
                       <TableCell>{entry.description}</TableCell>
-                      <TableCell className="text-destructive">${entry.debit || '-'}</TableCell>
-                      <TableCell className="text-success">${entry.credit || '-'}</TableCell>
+                      <TableCell className="text-destructive">
+                        {entry.debit ? `AED ${entry.debit}` : '-'}
+                      </TableCell>
+                      <TableCell className="text-success">
+                        {entry.credit ? `AED ${entry.credit}` : '-'}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -183,7 +187,7 @@ const AccountsModule = () => {
                       <TableCell className="font-medium">{entry.account}</TableCell>
                       <TableCell>{entry.type}</TableCell>
                       <TableCell className={entry.balance < 0 ? 'text-destructive' : 'text-success'}>
-                        ${Math.abs(entry.balance)}
+                        AED {Math.abs(entry.balance)}
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary">{entry.status}</Badge>
@@ -206,15 +210,15 @@ const AccountsModule = () => {
               <CardContent className="space-y-3">
                 <div className="flex justify-between p-3 bg-muted rounded-lg">
                   <span>Cash in Hand</span>
-                  <span className="font-bold">$15,000</span>
+                  <span className="font-bold">AED 15,000</span>
                 </div>
                 <div className="flex justify-between p-3 bg-muted rounded-lg">
                   <span>Stock</span>
-                  <span className="font-bold">$47,995</span>
+                  <span className="font-bold">AED 47,995</span>
                 </div>
                 <div className="flex justify-between p-3 bg-primary/10 rounded-lg">
                   <span className="font-bold">Total Assets</span>
-                  <span className="font-bold text-lg">$62,995</span>
+                  <span className="font-bold text-lg">AED 62,995</span>
                 </div>
               </CardContent>
             </Card>
@@ -226,15 +230,15 @@ const AccountsModule = () => {
               <CardContent className="space-y-3">
                 <div className="flex justify-between p-3 bg-muted rounded-lg">
                   <span>Accounts Payable</span>
-                  <span className="font-bold">$8,000</span>
+                  <span className="font-bold">AED 8,000</span>
                 </div>
                 <div className="flex justify-between p-3 bg-muted rounded-lg">
                   <span>Owner's Equity</span>
-                  <span className="font-bold">$54,995</span>
+                  <span className="font-bold">AED 54,995</span>
                 </div>
                 <div className="flex justify-between p-3 bg-primary/10 rounded-lg">
                   <span className="font-bold">Total Liabilities</span>
-                  <span className="font-bold text-lg">$62,995</span>
+                  <span className="font-bold text-lg">AED 62,995</span>
                 </div>
               </CardContent>
             </Card>
@@ -269,14 +273,18 @@ const AccountsModule = () => {
                   {trialBalance.map((entry, idx) => (
                     <TableRow key={idx}>
                       <TableCell className="font-medium">{entry.account}</TableCell>
-                      <TableCell className="text-destructive">${entry.debit || '-'}</TableCell>
-                      <TableCell className="text-success">${entry.credit || '-'}</TableCell>
+                      <TableCell className="text-destructive">
+                        AED {entry.debit || '-'}
+                      </TableCell>
+                      <TableCell className="text-success">
+                        AED {entry.credit || '-'}
+                      </TableCell>
                     </TableRow>
                   ))}
                   <TableRow className="font-bold bg-muted">
                     <TableCell>Total</TableCell>
-                    <TableCell className="text-destructive">$70,995</TableCell>
-                    <TableCell className="text-success">$21,500</TableCell>
+                    <TableCell className="text-destructive">AED 70,995</TableCell>
+                    <TableCell className="text-success">AED 21,500</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -311,10 +319,10 @@ const AccountsModule = () => {
                   {vatReport.map((entry, idx) => (
                     <TableRow key={idx}>
                       <TableCell className="font-medium">{entry.period}</TableCell>
-                      <TableCell>${entry.sales}</TableCell>
-                      <TableCell className="text-success">${entry.purchaseVAT}</TableCell>
-                      <TableCell className="text-destructive">${entry.salesVAT}</TableCell>
-                      <TableCell className="font-bold">${entry.payable}</TableCell>
+                      <TableCell>AED {entry.sales}</TableCell>
+                      <TableCell className="text-success">AED {entry.purchaseVAT}</TableCell>
+                      <TableCell className="text-destructive">AED {entry.salesVAT}</TableCell>
+                      <TableCell className="font-bold">AED {entry.payable}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

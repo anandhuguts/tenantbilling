@@ -67,7 +67,7 @@ const TenantDashboard = () => {
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">$2,345.67</div>
+            <div className="text-2xl font-bold text-foreground">AED 2,345.67</div>
             <p className="text-xs text-success mt-1">+12.5% from yesterday</p>
           </CardContent>
         </Card>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { InventoryProvider } from "@/contexts/InventoryContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { RoleBasedRoute } from "@/components/RoleBasedRoute";
 import { DashboardRouter } from "@/components/DashboardRouter";
@@ -23,7 +24,9 @@ import Inventory from "./pages/Inventory";
 import Staff from "./pages/Staff";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
-import BillingModule from "./pages/tenant/BillingModule";
+import BillingModule from "./pages/tenant/BillingModule.js";
+import ReportsModule from "./pages/tenant/ReportsModule";
+import AccountsModule from "./pages/tenant/AccountsModule.js";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +34,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <AuthProvider>
+        <InventoryProvider>
+        
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -56,6 +61,8 @@ const App = () => (
                 <Route path="settings" element={<Settings />} />
                 <Route path="orders" element={<RoleBasedRoute allowedRoles={['tenant', 'staff']}><Orders /></RoleBasedRoute>} />
                 <Route path="inventory" element={<RoleBasedRoute allowedRoles={['tenant']}><Inventory /></RoleBasedRoute>} />
+                <Route path="report" element={<RoleBasedRoute allowedRoles={['tenant']}><ReportsModule /></RoleBasedRoute>} />
+                <Route path="account" element={<RoleBasedRoute allowedRoles={['tenant']}><AccountsModule /></RoleBasedRoute>} />
                  <Route path="billing" element={<RoleBasedRoute allowedRoles={['tenant']}><BillingModule /></RoleBasedRoute>} />
                 <Route path="staff" element={<RoleBasedRoute allowedRoles={['tenant']}><Staff /></RoleBasedRoute>} />
                 <Route path="tasks" element={<RoleBasedRoute allowedRoles={['staff']}><Tasks /></RoleBasedRoute>} />
@@ -66,6 +73,7 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
+        </InventoryProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>

@@ -1,16 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { 
-  FileText, 
-  Download, 
+// components/ReportsModule.tsx
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Download,
   TrendingUp,
   Package,
   ShoppingCart,
-  BarChart3
-} from 'lucide-react';
+  BarChart3,
+  CreditCard,
+  PieChart,
+  LineChart as LineChartIcon,
+} from "lucide-react";
 import {
   LineChart,
   Line,
@@ -20,42 +23,67 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+  ResponsiveContainer,
+  Pie,
+  PieChart as RePieChart,
+  Cell,
+} from "recharts";
 
 const ReportsModule = () => {
-  // Dummy data
-  const stockMovement = [
-    { date: 'Jan 15', inflow: 150, outflow: 120 },
-    { date: 'Jan 16', inflow: 200, outflow: 180 },
-    { date: 'Jan 17', inflow: 100, outflow: 140 },
-    { date: 'Jan 18', inflow: 250, outflow: 200 },
-    { date: 'Jan 19', inflow: 180, outflow: 160 },
+  // Dummy Data
+  const summary = {
+    totalSales: 13500,
+    totalPurchases: 8000,
+    profit: 5500,
+    lowStock: 4,
+    transactions: 135,
+  };
+
+  const salesData = [
+    { date: "Oct 20", sales: 4500 },
+    { date: "Oct 21", sales: 3800 },
+    { date: "Oct 22", sales: 5200 },
+    { date: "Oct 23", sales: 6100 },
+    { date: "Oct 24", sales: 4800 },
   ];
 
-  const dailySales = [
-    { id: 1, date: '2025-01-20', transactions: 45, revenue: 4500, items: 120 },
-    { id: 2, date: '2025-01-19', transactions: 38, revenue: 3800, items: 95 },
-    { id: 3, date: '2025-01-18', transactions: 52, revenue: 5200, items: 140 },
-  ];
-
-  const dailyPurchases = [
-    { id: 1, date: '2025-01-20', supplier: 'Supplier A', items: 50, amount: 5000 },
-    { id: 2, date: '2025-01-19', supplier: 'Supplier B', items: 30, amount: 3000 },
+  const purchaseData = [
+    { date: "Oct 20", purchase: 3000 },
+    { date: "Oct 21", purchase: 2000 },
+    { date: "Oct 22", purchase: 4000 },
+    { date: "Oct 23", purchase: 2500 },
+    { date: "Oct 24", purchase: 3500 },
   ];
 
   const stockReport = [
-    { id: 1, product: 'Product A', available: 150, value: 44997.50, status: 'Good' },
-    { id: 2, product: 'Product B', available: 20, value: 999.80, status: 'Low' },
-    { id: 3, product: 'Product C', available: 200, value: 1998.00, status: 'Good' },
+    { id: 1, product: "Rice", available: 150, value: 44997.5, status: "Good" },
+    { id: 2, product: "Sugar", available: 20, value: 999.8, status: "Low" },
+    { id: 3, product: "Wheat", available: 200, value: 1998.0, status: "Good" },
   ];
+
+  const profitReport = [
+    { id: 1, product: "Rice", revenue: 5000, cost: 3500 },
+    { id: 2, product: "Sugar", revenue: 1000, cost: 700 },
+    { id: 3, product: "Wheat", revenue: 3000, cost: 2200 },
+  ];
+
+  const paymentSummary = [
+    { mode: "Cash", value: 5500 },
+    { mode: "UPI", value: 3200 },
+    { mode: "Card", value: 2800 },
+  ];
+
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Reports & Analytics</h1>
-          <p className="text-muted-foreground mt-1">View business insights and export reports</p>
+          <p className="text-muted-foreground mt-1">
+            View business insights and export detailed reports
+          </p>
         </div>
         <Button>
           <Download className="mr-2 h-4 w-4" />
@@ -64,79 +92,147 @@ const ReportsModule = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Total Sales</CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$13,500</div>
-            <p className="text-xs text-success mt-1">Last 7 days</p>
+            <div className="text-2xl font-bold">AED {summary.totalSales.toLocaleString()}</div>
+            <p className="text-xs text-success mt-1">Today</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Purchases</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Total Purchases</CardTitle>
             <ShoppingCart className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$8,000</div>
-            <p className="text-xs text-muted-foreground mt-1">Last 7 days</p>
+            <div className="text-2xl font-bold">AED {summary.totalPurchases.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">Today</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Stock Value</CardTitle>
-            <Package className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$47,995</div>
-            <p className="text-xs text-success mt-1">+5% from last week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Transactions</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Profit</CardTitle>
             <BarChart3 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">135</div>
+            <div className="text-2xl font-bold">AED {summary.profit.toLocaleString()}</div>
+            <p className="text-xs text-success mt-1">Updated live</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm text-muted-foreground">Low Stock</CardTitle>
+            <Package className="h-4 w-4 text-destructive" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{summary.lowStock}</div>
+            <p className="text-xs text-muted-foreground mt-1">Items below threshold</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm text-muted-foreground">Transactions</CardTitle>
+            <CreditCard className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{summary.transactions}</div>
             <p className="text-xs text-muted-foreground mt-1">Last 7 days</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabs for different reports */}
-      <Tabs defaultValue="stock-report" className="space-y-4">
+      {/* Tabs */}
+      <Tabs defaultValue="daily-summary" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="stock-report">Stock Report</TabsTrigger>
-          <TabsTrigger value="daily-sales">Daily Sales</TabsTrigger>
-          <TabsTrigger value="daily-purchase">Daily Purchase</TabsTrigger>
-          <TabsTrigger value="stock-movement">Stock Movement</TabsTrigger>
+          <TabsTrigger value="daily-summary">Daily Summary</TabsTrigger>
+          <TabsTrigger value="sales">Sales</TabsTrigger>
+          <TabsTrigger value="purchases">Purchases</TabsTrigger>
+          <TabsTrigger value="stock">Stock</TabsTrigger>
+          <TabsTrigger value="profit">Profit</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        {/* Stock Report */}
-        <TabsContent value="stock-report" className="space-y-4">
+        {/* DAILY SUMMARY */}
+        <TabsContent value="daily-summary">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Current Stock Report</CardTitle>
-                <Button variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
+              <CardTitle>Daily Summary Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={salesData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="sales" fill="hsl(var(--primary))" name="Sales" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* SALES */}
+        <TabsContent value="sales">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sales Report</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={salesData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="sales" stroke="hsl(var(--primary))" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* PURCHASES */}
+        <TabsContent value="purchases">
+          <Card>
+            <CardHeader>
+              <CardTitle>Purchase Report</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={purchaseData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="purchase" fill="hsl(var(--primary))" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* STOCK */}
+        <TabsContent value="stock">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock Overview</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Product</TableHead>
-                    <TableHead>Available Quantity</TableHead>
+                    <TableHead>Available</TableHead>
                     <TableHead>Stock Value</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
@@ -144,11 +240,11 @@ const ReportsModule = () => {
                 <TableBody>
                   {stockReport.map((item) => (
                     <TableRow key={item.id}>
-                      <TableCell className="font-medium">{item.product}</TableCell>
+                      <TableCell>{item.product}</TableCell>
                       <TableCell>{item.available}</TableCell>
-                      <TableCell>${item.value.toFixed(2)}</TableCell>
+                      <TableCell>AED {item.value.toFixed(2)}</TableCell>
                       <TableCell>
-                        <Badge variant={item.status === 'Low' ? 'destructive' : 'default'}>
+                        <Badge variant={item.status === "Low" ? "destructive" : "default"}>
                           {item.status}
                         </Badge>
                       </TableCell>
@@ -160,102 +256,69 @@ const ReportsModule = () => {
           </Card>
         </TabsContent>
 
-        {/* Daily Sales */}
-        <TabsContent value="daily-sales" className="space-y-4">
+        {/* PROFIT */}
+        <TabsContent value="profit">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Daily Sales Report</CardTitle>
-                <Button variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Transactions</TableHead>
-                    <TableHead>Items Sold</TableHead>
-                    <TableHead>Revenue</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {dailySales.map((sale) => (
-                    <TableRow key={sale.id}>
-                      <TableCell>{sale.date}</TableCell>
-                      <TableCell>{sale.transactions}</TableCell>
-                      <TableCell>{sale.items}</TableCell>
-                      <TableCell className="font-bold">${sale.revenue}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Daily Purchase */}
-        <TabsContent value="daily-purchase" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Daily Purchase Report</CardTitle>
-                <Button variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Supplier</TableHead>
-                    <TableHead>Items</TableHead>
-                    <TableHead>Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {dailyPurchases.map((purchase) => (
-                    <TableRow key={purchase.id}>
-                      <TableCell>{purchase.date}</TableCell>
-                      <TableCell>{purchase.supplier}</TableCell>
-                      <TableCell>{purchase.items}</TableCell>
-                      <TableCell className="font-bold">${purchase.amount}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Stock Movement */}
-        <TabsContent value="stock-movement" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Stock Movement Report</CardTitle>
+              <CardTitle>Profit Analysis</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={stockMovement}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Bar dataKey="inflow" fill="hsl(var(--primary))" name="Inflow (Purchase)" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="outflow" fill="hsl(var(--destructive))" name="Outflow (Sales)" radius={[8, 8, 0, 0]} />
-                </BarChart>
+                <LineChart data={profitReport.map((p) => ({ product: p.product, profit: p.revenue - p.cost }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="product" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="profit" stroke="hsl(var(--primary))" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* PAYMENTS */}
+        <TabsContent value="payments">
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <RePieChart>
+                  <Pie data={paymentSummary} dataKey="value" nameKey="mode" outerRadius={100}>
+                    {paymentSummary.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </RePieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ANALYTICS */}
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Overall Analytics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={350}>
+                <LineChart
+                  data={salesData.map((d, i) => ({
+                    date: d.date,
+                    sales: d.sales,
+                    purchase: purchaseData[i]?.purchase || 0,
+                  }))}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="sales" stroke="#82ca9d" name="Sales" />
+                  <Line type="monotone" dataKey="purchase" stroke="#8884d8" name="Purchases" />
+                </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
