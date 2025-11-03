@@ -65,6 +65,7 @@ export const tenantAPI = {
 
   // Update existing tenant
   updateTenant: async (id: number, tenantData: any) => {
+    console.log("Updating tenant with data:", tenantData);
     const res = await fetch(`${API_BASE}/tenants/${id}`, {
       method: "PUT",
       headers: getAuthHeaders(),
