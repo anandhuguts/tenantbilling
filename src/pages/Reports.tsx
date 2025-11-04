@@ -142,21 +142,18 @@ const Reports = () => {
     }
   };
 
-  const handleExport = async (
-    reportType: string,
-    forcedFormat?: "csv" | "pdf" | "excel"
-  ) => {
+  const handleExport = async (reportType: string) => {
     try {
       setExporting(true);
 
-      // If a forcedFormat is provided, use it; otherwise use the user's selected exportFormat
-      const sendFormat: "csv" | "pdf" | "excel" = forcedFormat || exportFormat;
-
-      await reportsAPI.exportReport(reportType, sendFormat);
+      // Send the user-selected format directly to the backend.
+      // If the user selected 'pdf' the backend will receive type=pdf and
+      // can generate a PDF (as you observed when opening the direct link).
+      await reportsAPI.exportReport(reportType, exportFormat);
 
       toast({
         title: "Export successful",
-        description: `${reportType} report exported as ${sendFormat.toUpperCase()}`,
+        description: `${reportType} report exported as ${exportFormat.toUpperCase()}`,
       });
     } catch (error) {
       console.error("Export failed:", error);
@@ -678,7 +675,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("payments", "pdf")}
+              onClick={() => handleExport("revenue")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -687,7 +684,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("tenants", "pdf")}
+              onClick={() => handleExport("tenants")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -696,7 +693,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("users", "pdf")}
+              onClick={() => handleExport("users")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
