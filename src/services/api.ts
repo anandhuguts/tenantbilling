@@ -320,9 +320,11 @@ export const reportsAPI = {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
+      // Use .xlsx extension for excel format so downloaded filename is correct
+      const ext = format === "excel" ? "xlsx" : format;
       a.download = `${reportType}_${
         new Date().toISOString().split("T")[0]
-      }.${format}`;
+      }.${ext}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -343,14 +345,70 @@ export const reportsAPI = {
 export const activityAPI = {
   getRecentActivity: async (limit: number = 10) => {
     return [
-      { id: 1, user: "Maria Bella", action: "upgraded plan", target: "Professional", time: "5 minutes ago", type: "upgrade" },
-      { id: 2, user: "John Davis", action: "created new branch", target: "Downtown Location", time: "12 minutes ago", type: "create" },
-      { id: 3, user: "Sarah Thompson", action: "enabled module", target: "Appointments", time: "23 minutes ago", type: "update" },
-      { id: 4, user: "Michael Chen", action: "added users", target: "3 new users", time: "1 hour ago", type: "create" },
-      { id: 5, user: "Li Wei", action: "submitted support ticket", target: "Payment Issue", time: "2 hours ago", type: "support" },
-      { id: 6, user: "Emma Wilson", action: "renewed subscription", target: "Annual Plan", time: "3 hours ago", type: "payment" },
-      { id: 7, user: "Robert Brown", action: "updated settings", target: "Tax Configuration", time: "4 hours ago", type: "update" },
-      { id: 8, user: "James Rodriguez", action: "requested feature", target: "SMS Integration", time: "5 hours ago", type: "feature" },
+      {
+        id: 1,
+        user: "Maria Bella",
+        action: "upgraded plan",
+        target: "Professional",
+        time: "5 minutes ago",
+        type: "upgrade",
+      },
+      {
+        id: 2,
+        user: "John Davis",
+        action: "created new branch",
+        target: "Downtown Location",
+        time: "12 minutes ago",
+        type: "create",
+      },
+      {
+        id: 3,
+        user: "Sarah Thompson",
+        action: "enabled module",
+        target: "Appointments",
+        time: "23 minutes ago",
+        type: "update",
+      },
+      {
+        id: 4,
+        user: "Michael Chen",
+        action: "added users",
+        target: "3 new users",
+        time: "1 hour ago",
+        type: "create",
+      },
+      {
+        id: 5,
+        user: "Li Wei",
+        action: "submitted support ticket",
+        target: "Payment Issue",
+        time: "2 hours ago",
+        type: "support",
+      },
+      {
+        id: 6,
+        user: "Emma Wilson",
+        action: "renewed subscription",
+        target: "Annual Plan",
+        time: "3 hours ago",
+        type: "payment",
+      },
+      {
+        id: 7,
+        user: "Robert Brown",
+        action: "updated settings",
+        target: "Tax Configuration",
+        time: "4 hours ago",
+        type: "update",
+      },
+      {
+        id: 8,
+        user: "James Rodriguez",
+        action: "requested feature",
+        target: "SMS Integration",
+        time: "5 hours ago",
+        type: "feature",
+      },
     ].slice(0, limit);
   },
 };
@@ -362,9 +420,30 @@ export const activityAPI = {
 export const userAPI = {
   getUsers: async () => {
     return [
-      { id: 1, name: "Super Admin", email: "admin@tenantsphere.com", role: "Super Admin", status: "Active", lastLogin: "2024-10-23" },
-      { id: 2, name: "Jane Smith", email: "jane@tenantsphere.com", role: "Admin", status: "Active", lastLogin: "2024-10-22" },
-      { id: 3, name: "Tom Wilson", email: "tom@tenantsphere.com", role: "Support", status: "Active", lastLogin: "2024-10-23" },
+      {
+        id: 1,
+        name: "Super Admin",
+        email: "admin@tenantsphere.com",
+        role: "Super Admin",
+        status: "Active",
+        lastLogin: "2024-10-23",
+      },
+      {
+        id: 2,
+        name: "Jane Smith",
+        email: "jane@tenantsphere.com",
+        role: "Admin",
+        status: "Active",
+        lastLogin: "2024-10-22",
+      },
+      {
+        id: 3,
+        name: "Tom Wilson",
+        email: "tom@tenantsphere.com",
+        role: "Support",
+        status: "Active",
+        lastLogin: "2024-10-23",
+      },
     ];
   },
 };
@@ -405,7 +484,9 @@ export const paymentsAPI = {
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
+        throw new Error(
+          `Server returned non-JSON response: ${text.substring(0, 100)}`
+        );
       }
 
       if (!res.ok) throw new Error(data.error || "Failed to create payment");

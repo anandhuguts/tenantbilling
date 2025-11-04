@@ -142,14 +142,21 @@ const Reports = () => {
     }
   };
 
-  const handleExport = async (reportType: string) => {
+  const handleExport = async (
+    reportType: string,
+    forcedFormat?: "csv" | "pdf" | "excel"
+  ) => {
     try {
       setExporting(true);
-      await reportsAPI.exportReport(reportType, exportFormat);
+
+      // If a forcedFormat is provided, use it; otherwise use the user's selected exportFormat
+      const sendFormat: "csv" | "pdf" | "excel" = forcedFormat || exportFormat;
+
+      await reportsAPI.exportReport(reportType, sendFormat);
 
       toast({
         title: "Export successful",
-        description: `${reportType} report exported as ${exportFormat.toUpperCase()}`,
+        description: `${reportType} report exported as ${sendFormat.toUpperCase()}`,
       });
     } catch (error) {
       console.error("Export failed:", error);
@@ -671,7 +678,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("revenue")}
+              onClick={() => handleExport("payments", "pdf")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -680,7 +687,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("tenants")}
+              onClick={() => handleExport("tenants", "pdf")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -689,16 +696,13 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("users")}
+              onClick={() => handleExport("users", "pdf")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
               User Report
             </Button>
-            <Button
-              variant="outline"
-              className="justify-start"
-            >
+            <Button variant="outline" className="justify-start">
               <FileText className="mr-2 h-4 w-4" />
               <DownloadReportButton report="all-data" />
             </Button>
