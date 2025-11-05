@@ -338,7 +338,7 @@ const Dashboard = () => {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="month" className="text-xs" />
+                <XAxis dataKey="month" className="text-xs" reversed />
                 <YAxis className="text-xs" />
                 <Tooltip
                   contentStyle={{

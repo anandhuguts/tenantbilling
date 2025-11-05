@@ -675,7 +675,7 @@ const Reports = () => {
             <Button
               variant="outline"
               className="justify-start"
-              onClick={() => handleExport("revenue")}
+              onClick={() => handleExport("payments")}
               disabled={exporting}
             >
               <FileText className="mr-2 h-4 w-4" />
